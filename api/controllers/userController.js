@@ -24,12 +24,19 @@ exports.register = function(req, res) {
 };
 
 exports.sign_in = function(req, res) {
+  const regex = new RegExp('^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@coppel.com$');
+
   User.findOne({
     email: req.body.email
   }, function(err, user) {
-    if (err) throw err;
-    if (!user || !user.comparePassword(req.body.password)) {
-      return res.status(401).json({ message: 'Fallo en la autenticacion. Usuario o contraseña no coinciden.' });
+    if (err) {
+      return res.status(500).json({ message: err });
+    }
+    if (!user || !regex.test(user.email)){
+      return res.status(401).json({ message: 'Correo no valido, solo se admite el ingreso con correos de la empresa (@coppel.com)!!' });
+    } 
+    if (!user.comparePassword(req.body.password)) {
+      return res.status(401).json({ message: 'Fallo en la autenticacion. Usuario y contraseña no coinciden.' });
     }
     return res.json({ token: jwt.sign({ email: user.email, fullName: user.fullName, _id: user._id }, config.SECRET) });
   });
@@ -39,7 +46,6 @@ exports.loginRequired = function(req, res, next) {
   if (req.user) {
     next();
   } else {
-
     return res.status(401).json({ message: 'Usuario no autorizado!!' });
   }
 };
