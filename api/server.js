@@ -8,6 +8,7 @@ var express = require('express'),
   cors = require('cors'),
 
   User = require('./models/userModel'),
+  File = require('./models/fileModel'),
   bodyParser = require('body-parser'),
   jsonwebtoken = require("jsonwebtoken");
 

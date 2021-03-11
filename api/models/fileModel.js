@@ -7,6 +7,11 @@ var mongoose = require('mongoose'),
  * Modelo del archivo de texto
  */
 var FileSchema = new Schema({
+  idUsuario: {
+    type: String,
+    trim: true,
+    required: true
+  },
   fileText: {
     type: String,
     trim: true,
