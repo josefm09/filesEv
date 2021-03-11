@@ -5,13 +5,17 @@ const config = require('./config');
 var express = require('express'),
   app = express(),
   port = config.PORT,
-
+  cors = require('cors'),
 
   User = require('./models/userModel'),
   bodyParser = require('body-parser'),
   jsonwebtoken = require("jsonwebtoken");
 
 const mongoose = require('mongoose');
+
+app.use(cors());
+app.options('*', cors());
+
 const option = {
     socketTimeoutMS: 30000,
     keepAlive: true,
@@ -42,7 +46,7 @@ app.use(function(req, res, next) {
     next();
   }
 });
-var routes = require('./route/userRoute');
+var routes = require('./route/routes');
 routes(app);
 
 app.use(function(req, res) {
