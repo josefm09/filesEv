@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose'),
   jwt = require('jsonwebtoken'),
-  bcrypt = require('bcrypt'),
+  bcrypt = require('bcryptjs'),
   config = require('../config'),
   User = mongoose.model('User');
 
@@ -24,7 +24,7 @@ exports.register = function(req, res) {
 };
 
 exports.sign_in = function(req, res) {
-  const regex = new RegExp('^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@coppel.com$');
+  const regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@coppel.com$/);
 
   User.findOne({
     email: req.body.email
@@ -32,7 +32,9 @@ exports.sign_in = function(req, res) {
     if (err) {
       return res.status(500).json({ message: err });
     }
+    
     if (!user || !regex.test(user.email)){
+      console.log(!regex.test(user.email));
       return res.status(401).json({ message: 'Correo no valido, solo se admite el ingreso con correos de la empresa (@coppel.com)!!' });
     } 
     if (!user.comparePassword(req.body.password)) {
