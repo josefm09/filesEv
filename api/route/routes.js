@@ -11,4 +11,6 @@ module.exports = function(app) {
         .post(userHandlers.sign_in);
     app.route('/upload')
         .post(userHandlers.loginRequired, fileHandlers.upload);
+    app.route('/files')
+        .get(userHandlers.loginRequired, fileHandlers.get);
 };

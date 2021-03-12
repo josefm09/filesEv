@@ -34,7 +34,6 @@ exports.sign_in = function(req, res) {
     }
     
     if (!user || !regex.test(user.email)){
-      console.log(!regex.test(user.email));
       return res.status(401).json({ message: 'Correo no valido, solo se admite el ingreso con correos de la empresa (@coppel.com)!!' });
     } 
     if (!user.comparePassword(req.body.password)) {

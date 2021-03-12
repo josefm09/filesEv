@@ -17,3 +17,16 @@ exports.upload = function(req,res){
     }
   });
 };
+
+exports.get = function(req,res){
+
+  File.find({
+    idUsuario: req.user._id
+  }, function(err, files) {
+    if (err) {
+      return res.status(500).json({ message: err });
+    }
+
+    return res.json(files);
+  });
+};
