@@ -12,8 +12,12 @@ var FileSchema = new Schema({
     trim: true,
     required: true
   },
-  fileText: {
+  name: {
     type: String,
+    trim: true
+  },
+  fileText: {
+    type: Schema.Types.Mixed,
     trim: true,
     required: true
   },
