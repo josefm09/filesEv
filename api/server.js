@@ -9,6 +9,7 @@ var express = require('express'),
 
   User = require('./models/userModel'),
   File = require('./models/fileModel'),
+  Analysis = require('./models/analysisModel'),
   bodyParser = require('body-parser'),
   jsonwebtoken = require("jsonwebtoken");
 
