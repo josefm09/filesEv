@@ -56,12 +56,10 @@ function analyze(text,userId,response){
   .then(res => {
     var n = -1;
     var bestSentence = "";
-    console.log(res.data);
     res.data.sentences.forEach(element => {
       if(element.sentiment.polarity > n){
         n = element.sentiment.polarity;
         bestSentence = element.sentence;
-        console.log(bestSentence);
       }
     });
 
