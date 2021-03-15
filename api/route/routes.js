@@ -13,4 +13,6 @@ module.exports = function(app) {
         .post(userHandlers.loginRequired, fileHandlers.upload);
     app.route('/files')
         .get(userHandlers.loginRequired, fileHandlers.get);
+    app.route('/analysis')
+        .get(userHandlers.loginRequired, fileHandlers.getAnalysis);
 };

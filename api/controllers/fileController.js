@@ -5,17 +5,6 @@ var mongoose = require('mongoose'),
   Analysis = mongoose.model('Analysis'),
   axios = require('axios');
 
-const sentim = {
-  hostname: 'sentim-api.herokuapp.com',
-  port: 443,
-  path: '/api/v1/',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
-}
-
 exports.upload = function(req,res){
   var newText = new File(req.body);
 
@@ -26,7 +15,7 @@ exports.upload = function(req,res){
         message: err
       });
     } else {;
-      analyze(file.fileText.fileText,req.user._id);
+      analyze(file.fileText,req.user._id,res);
       return res.json(file);
     }
   });
@@ -45,41 +34,53 @@ exports.get = function(req,res){
   });
 };
 
-function analyze(text,userId){
+exports.getAnalysis = function(req,res){
+
+  Analysis.find({
+    idUsuario: req.user._id
+  }, function(err, analysis) {
+    if (err) {
+      return res.status(500).json({ message: err });
+    }
+
+    return res.json(analysis);
+  });
+};
+
+function analyze(text,userId,response){
 
   axios
   .post('https://sentim-api.herokuapp.com/api/v1/', {
     text: text
   })
   .then(res => {
-    console.log(`statusCode: ${res.statusCode}`)
-    console.log(res.data)
     var n = -1;
     var bestSentence = "";
+    console.log(res.data);
     res.data.sentences.forEach(element => {
-      if(element.polarity > n){
-        n = element.polarity;
+      if(element.sentiment.polarity > n){
+        n = element.sentiment.polarity;
         bestSentence = element.sentence;
+        console.log(bestSentence);
       }
     });
 
-    const analysisBody = JSON.stringify({
+    const analysisBody = {
       idUsuario: userId,
       result: res.data.result.type,
       polarity: res.data.result.polarity,
       bestSentence: bestSentence
-    });
+    };
 
     var newAnalysis = new Analysis(analysisBody);
 
     newAnalysis.save(function(err, analysis) {
       if (err) {
-        return res.status(400).send({
+        return response.status(400).send({
           message: err
         });
       } else {
         console.log('Analizado correctamente');
-        return res.json(analysis);
       }
     });
   })
