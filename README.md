@@ -31,6 +31,10 @@ Api con autenticación JWT para obtener los resultados de los análisis de senti
       1. [Parametros](#parametros-gets)
       2. [Ruta](#ruta-gets)
       3. [Respuesta ejemplo](#respuesta-ejemplo-gets)
+4. [Colecciones](#colecciones)
+      1. [Análisis](#analisis)
+      2. [Archivos](#archivos)
+      3. [Usuarios](#usuarios)
 
 ## Configuración inicial
 
@@ -277,4 +281,86 @@ respuesta GET /analysis
         "__v": 0
     }
 ]
+```
+
+## Colecciones
+Existen 3 colecciones usuarios que tiene que ver con la autenticación, arcvhios que son los textos que se eliminan cada 12 horas gracias a la inclusión de un index en la colección y los análisis que sirven para almacenar los resultados que arroja la api [SENTIM](https://sentim-api.herokuapp.com/)
+
+### Análisis
+```javaScript
+var AnalysisSchema = new Schema({
+  idUsuario: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  result: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  polarity: {
+    type: Number,
+    trim: true,
+    required: true
+  },
+  bestSentence: {
+      type: String,
+      trim: true,
+      required: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  }
+});
+```
+
+### Archivos
+```javaScript
+var FileSchema = new Schema({
+  idUsuario: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  name: {
+    type: String,
+    trim: true
+  },
+  fileText: {
+    type: Schema.Types.Mixed,
+    trim: true,
+    required: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  }
+});
+```
+
+### Usuarios
+```javaScript
+var UserSchema = new Schema({
+  fullName: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  email: {
+    type: String,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    required: true
+  },
+  hash_password: {
+    type: String
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  }
+});
 ```
